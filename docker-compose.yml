@@ -1,0 +1,30 @@
+version: '3.0'
+
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=brok
+      - POSTGRES_PASSWORD=brok
+      - POSTGRES_DB=db_brok
+    restart: always
+    ports:
+      - "5433:5432"
+
+  nestjs:
+    image: node:12
+    working_dir: /usr/src/nest-api
+    restart: always
+    command: bash -c "npm install && npm run start:dev"
+    volumes:
+      - .:/usr/src/nest-api
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  nestjs:
